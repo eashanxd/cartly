@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Page not found — Cartly{% endblock %}
+{% block content %}
+<section class="error-page shell"><p class="eyebrow">404 / LOST A LITTLE</p><h1>That page went<br><em>somewhere else.</em></h1><p>We couldn't find what you're looking for, but there are plenty of good finds waiting.</p><a class="button button-dark" href="{{ url_for('products') }}">Browse products <span aria-hidden="true">↗</span></a></section>
+{% endblock %}

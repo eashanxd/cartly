@@ -1,0 +1,22 @@
+<article class="product-card">
+  <a class="product-image-link" href="{{ url_for('product_detail', product_id=product.id) }}" aria-label="View {{ product.name }}">
+    <div class="product-image">
+      <img src="{{ product.image or url_for('static', filename='img/product-placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" data-fallback-image>
+      {% if product.discount > 0 and product.discount < 100 %}<span class="product-tag" aria-label="{{ "%.0f"|format(product.discount) }} percent off">{{ "%.0f"|format(product.discount) }}% OFF</span>{% endif %}
+    </div>
+  </a>
+  <div class="product-meta"><span>{{ product.category }}</span><span class="rating"><span aria-hidden="true">★</span> {{ "%.1f"|format(product.rating) }}</span></div>
+  <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+  <div class="product-stock {% if product.stock < 1 %}stock-unavailable{% elif product.stock <= 5 %}stock-low{% endif %}">{% if product.stock < 1 %}Out of stock{% elif product.stock <= 5 %}Only {{ product.stock }} left{% else %}{{ product.stock }} in stock{% endif %}</div>
+  <div class="product-card-bottom">
+    <span class="price">${{ "%.2f"|format(product.price) }}</span>
+    {% if product.discount > 0 and product.discount < 100 %}<span class="original-price">${{ "%.2f"|format(product.price / (1 - product.discount / 100)) }}</span>{% endif %}
+  </div>
+  <div class="product-card-actions">
+    <a class="button button-outline" href="{{ url_for('product_detail', product_id=product.id) }}">View details</a>
+    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post">
+      <input type="hidden" name="quantity" value="1">
+      <button class="button button-dark" type="submit" {% if product.stock < 1 %}disabled{% endif %}>Add to cart <span aria-hidden="true">+</span></button>
+    </form>
+  </div>
+</article>

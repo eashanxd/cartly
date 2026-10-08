@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Catalog temporarily unavailable — Cartly{% endblock %}
+{% block content %}
+<section class="error-page shell">
+  <p class="eyebrow">A SMALL DETOUR</p>
+  <h1>The catalog is<br><em>taking a breather.</em></h1>
+  <p>{{ catalog_error }}</p>
+  <a class="button button-dark" href="{{ url_for('index') }}">Try Cartly again <span aria-hidden="true">↗</span></a>
+</section>
+{% endblock %}

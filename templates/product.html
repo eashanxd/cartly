@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Cartly{% endblock %}
+{% block content %}
+<div class="shell breadcrumb"><a href="{{ url_for('index') }}">Home</a><span aria-hidden="true">/</span><a href="{{ url_for('products') }}">Shop</a><span aria-hidden="true">/</span><span>{{ product.name }}</span></div>
+<section class="product-detail shell">
+  <div class="detail-image">
+    <img src="{{ product.image or url_for('static', filename='img/product-placeholder.svg') }}" alt="{{ product.name }}" data-fallback-image>
+    {% if product.images|length > 1 %}
+    <div class="detail-thumbnails" aria-label="Additional product images">
+      {% for image in product.images %}
+      <button type="button" class="detail-thumbnail" data-product-image="{{ image }}" aria-label="Show image {{ loop.index }}">
+        <img src="{{ image }}" alt="" loading="lazy" data-fallback-image>
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <div class="detail-copy">
+    <p class="eyebrow">{{ product.category|upper }} <span class="detail-separator">/</span> {{ product.brand|upper }}</p>
+    <h1>{{ product.name }}</h1>
+    <div class="detail-rating"><span class="rating"><span aria-hidden="true">★</span> {{ "%.1f"|format(product.rating) }}</span><span>Customer rating</span></div>
+    <div class="detail-pricing">
+      <p class="detail-price">${{ "%.2f"|format(product.price) }}</p>
+      {% if product.discount > 0 and product.discount < 100 %}
+      <span class="detail-original-price">${{ "%.2f"|format(product.price / (1 - product.discount / 100)) }}</span>
+      <span class="detail-discount">{{ "%.0f"|format(product.discount) }}% OFF</span>
+      {% endif %}
+    </div>
+    <p class="detail-description">{{ product.description }}</p>
+    <p class="stock-status {% if product.stock <= 5 %}stock-low{% endif %}"><span aria-hidden="true">●</span> {% if product.stock > 0 %}{% if product.stock <= 5 %}Only {{ product.stock }} left{% else %}In stock{% endif %}{% else %}Out of stock{% endif %}</p>
+    <form class="detail-add-form" action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post">
+      <div class="quantity-control" data-quantity-control>
+        <button type="button" data-quantity-step="-1" aria-label="Decrease quantity">−</button>
+        <label class="visually-hidden" for="detail-quantity">Quantity</label>
+        <input id="detail-quantity" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" inputmode="numeric" {% if product.stock == 0 %}disabled{% endif %}>
+        <button type="button" data-quantity-step="1" aria-label="Increase quantity" {% if product.stock == 0 %}disabled{% endif %}>+</button>
+      </div>
+      <button class="button button-dark add-to-cart" type="submit" {% if product.stock == 0 %}disabled{% endif %}>Add to cart <span aria-hidden="true">↗</span></button>
+    </form>
+    <div class="detail-points"><p><span aria-hidden="true">✳</span> Considered quality, made for everyday</p><p><span aria-hidden="true">↗</span> Easy browsing, no checkout just yet</p></div>
+  </div>
+</section>
+<section class="detail-bottom shell"><p>MORE TO LOVE</p><a href="{{ url_for('products', category=product.category) }}">Explore more in {{ product.category }} <span aria-hidden="true">↗</span></a></section>
+{% endblock %}

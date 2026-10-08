@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong — Cartly{% endblock %}
+{% block content %}
+<section class="error-page shell"><p class="eyebrow">A SMALL DETOUR</p><h1>Something didn't<br><em>go as planned.</em></h1><p>Please try again in a moment. Your browsing can continue from here.</p><a class="button button-dark" href="{{ url_for('index') }}">Back to Cartly <span aria-hidden="true">↗</span></a></section>
+{% endblock %}

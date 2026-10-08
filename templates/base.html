@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111513">
+  <meta name="description" content="Thoughtful finds for everyday living. Discover the Cartly edit.">
+  <title>{% block title %}Cartly — good finds, made simple{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="announcement">A little more joy in your everyday <span aria-hidden="true">✳</span> Discover something lovely</div>
+  <header class="site-header">
+    <nav class="navbar shell" aria-label="Main navigation">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="Cartly home"><span class="brand-mark" aria-hidden="true">c</span>cartly<span class="brand-period">.</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation"><span></span><span></span></button>
+      <div class="nav-links" id="primary-links">
+        <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{{ url_for('products') }}" {% if request.endpoint in ['products', 'product_detail'] %}aria-current="page"{% endif %}>Products</a>
+        <div class="nav-category">
+          <a href="{{ url_for('index') }}#categories">Categories</a>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <form class="nav-search" action="{{ url_for('products') }}" method="get" role="search">
+          <label class="visually-hidden" for="nav-search-input">Search products</label>
+          <input id="nav-search-input" type="search" name="search" placeholder="Find something..." value="{{ request.args.get('search', request.args.get('q', '')) }}">
+          <button type="submit" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"></circle><path d="m16 16 4.2 4.2"></path></svg></button>
+        </form>
+        <a class="cart-link" href="{{ url_for('cart') }}" aria-label="Shopping cart, {{ cart_count }} items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 4.5h2l2.1 10.1a1.8 1.8 0 0 0 1.8 1.4h8.7a1.8 1.8 0 0 0 1.7-1.3l1.3-6.3H6.3"></path><circle cx="9.6" cy="19.3" r="1"></circle><circle cx="18" cy="19.3" r="1"></circle></svg>
+          <span class="cart-label">Cart</span><span class="cart-count">{{ cart_count }}</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-wrap shell" aria-live="polite">
+      {% for category, message in messages %}
+      <p class="flash flash-{{ category }}" role="status" data-toast>{{ message }}<button type="button" class="toast-close" aria-label="Dismiss notification">×</button></p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="shell footer-main">
+      <div><a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true">c</span>cartly<span class="brand-period">.</span></a><p>Good things for the everyday.</p></div>
+      <div class="footer-note"><span>Thoughtfully picked.</span><span>Made for real life.</span></div>
+      <a class="footer-shop" href="{{ url_for('products') }}">Explore the collection <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="shell footer-bottom"><span>© 2026 Cartly. A little more joy, every day.</span><span>Independent by design.</span></div>
+  </footer>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
